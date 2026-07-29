@@ -6,12 +6,14 @@ class GestorDatos:
         self.proveedor = "Yahoo Finance"
 
     def descargar_datos(self, ticker, periodo):
+        ticker_limpio = ticker.strip().upper()
+        periodo_limpio = periodo.strip().lower()
         print(f"Descargando datos de {ticker} desde {self.proveedor}...")
-        ticker_data = yf.Ticker(ticker)
-        dataframe_crudo = ticker_data.history(period=periodo)
+        ticker_data = yf.Ticker(ticker_limpio)
+        dataframe_crudo = ticker_data.history(period=periodo_limpio)
 
         if dataframe_crudo.empty:
-            raise ValueError(f" No se pudieron descargar datos para {ticker}")
+            raise ValueError(f" No se pudieron descargar datos para {ticker_limpio}")
         
         return dataframe_crudo
 
@@ -20,8 +22,9 @@ class GestorDatos:
         if dataframe_crudo.empty:
             print("⚠️ El DataFrame está vacío. No se pueden calcular indicadores.")
             return dataframe_crudo
-        dataframe_crudo['MA5'] = dataframe_crudo['Close'].rolling(window=5).mean()
-        dataframe_crudo['MA20'] = dataframe_crudo['Close'].rolling(window=20).mean()
+        df = dataframe_crudo.copy()
+        df['MA5'] = df['Close'].rolling(window=5).mean()
+        df['MA20'] = df['Close'].rolling(window=20).mean()
 
-        return dataframe_crudo
+        return df
     
