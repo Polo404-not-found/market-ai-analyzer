@@ -6,11 +6,11 @@ Hi, dear reader, I'm Polo — welcome, and thanks for checking out this project.
 
 I'd really appreciate any feedback.
 
----
+Financial market analyzer that combines real historical data with technical indicators (moving averages) and AI-generated analysis (Gemini), now with a basic desktop GUI built with PySide6.
 
 Financial market analyzer that combines real historical data with technical indicators (moving averages) and AI-generated analysis (Gemini), now with a basic desktop GUI built with PySide6.
 
-## What it does
+Or the original command-line version:
 
 - Downloads historical data for any asset available on Yahoo Finance (stocks, cryptocurrencies, futures, ETFs)
 - Calculates 5-day and 20-day moving averages (MA5, MA20)
@@ -63,9 +63,9 @@ $env:GEMINI_API_KEY="your-key-here"
    Or the original command-line version:
    ```
    python Backend/main.py
-   ```
+Usage
 
-## Usage
+Enter a ticker (e.g. BTC-USD, AAPL, GC=F) and a time period (e.g. 1mo, 3mo, 1y) in the GUI, or when prompted in the terminal version, and the app will return the data chart along with an AI-generated technical analysis.
 
 Enter a ticker (e.g. `BTC-USD`, `AAPL`, `GC=F`) and a time period (e.g. `1mo`, `3mo`, `1y`) in the GUI, or when prompted in the terminal version, and the app will return the data chart along with an AI-generated technical analysis.
 
