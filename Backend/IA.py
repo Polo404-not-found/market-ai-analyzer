@@ -21,6 +21,7 @@ class AnalistaIA:
             3. Posibles escenarios o predicciones probabilísticas para las próximas jornadas basándote en la fuerza de los indicadores.
                 
             Sé muy profesional, claro y técnico en tu lenguaje.
+            Responde únicamente utilizando texto plano y formato Markdown estándar. NO utilices LaTeX ni sintaxis como \\text{{}} o $$ para fórmulas matemáticas
             """
         return prompt
 
