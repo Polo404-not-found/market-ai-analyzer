@@ -21,7 +21,8 @@ Or the original command-line version:
 
 ```
 Backend/       # Core logic: data fetching, indicators, Gemini integration (OOP)
-GUI.py         # Desktop interface built with PySide6
+Frontend/      # Desktop interface built with PySide6 (OOP)
+app.py         # Main file
 requirements.txt
 ```
 
@@ -57,12 +58,9 @@ $env:GEMINI_API_KEY="your-key-here"
 
    Desktop GUI:
    ```
-   python GUI.py
+   python app.py
    ```
 
-   Or the original command-line version:
-   ```
-   python Backend/main.py
 Usage
 
 Enter a ticker (e.g. BTC-USD, AAPL, GC=F) and a time period (e.g. 1mo, 3mo, 1y) in the GUI, or when prompted in the terminal version, and the app will return the data chart along with an AI-generated technical analysis.
@@ -74,13 +72,14 @@ Enter a ticker (e.g. `BTC-USD`, `AAPL`, `GC=F`) and a time period (e.g. `1mo`, `
 This project was built in stages rather than all at once:
 
 - **Backend first**: the data-fetching, indicator calculation, and Gemini integration were designed with an object-oriented structure from the start.
-- **GUI, iteratively**: I spent time working directly from the official PySide6 documentation before writing any GUI code. Where the docs were unclear or too sparse to get unstuck, I used AI to clarify exact syntax for connecting widgets to the backend logic — never to generate logic I didn't understand. The current `GUI.py` is a first working version; a refactor into separate, OOP-based modules (mirroring the backend's structure) is planned next.
+- **GUI, iteratively**: Now GUI.py file was modularized through OOP technics to optimize the code and its functions, added the candlechart viewer.
 - **AI as a tool, not a shortcut**: throughout the project, AI was used to speed up learning correct library syntax and debug specific errors — every line was reviewed and understood before being committed.
+- **New API function**: Now you can store your google genai API in the GUI, and automatically load it through a config.json.
 
 ## Roadmap
 
-- [ ] Refactor `GUI.py` into modular, OOP-based components
-- [ ] Add candlestick chart visualization
+- [x] Refactor `GUI.py` into modular, OOP-based components
+- [x] Add candlestick chart visualization
 - [ ] Improve GUI style and overall visual design
 - [ ] Package the app as a standalone executable (.exe)
 - [ ] Create a setup/installer to remove the need for manual `pip install -r requirements.txt`, making the app easier to access and use for any user

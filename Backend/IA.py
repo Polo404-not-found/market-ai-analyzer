@@ -1,9 +1,20 @@
 from google import genai 
+import os
 
 class AnalistaIA:
     def __init__(self):
-        self.client = genai.Client()
         self.modelo = "gemini-3.5-flash"
+        self._client = None
+
+    @property 
+    def client(self):
+        if self._client is None:
+            api_key = os.environ.get("GEMINI_API_KEY")
+            if not api_key:
+                raise ValueError("No se a configurado la API key de Gemini")
+            self._client = genai.Client()
+        return self._client 
+        
 
     def construir_prompt(self, datos_procesados):
         print("Construyendo prompt para el análisis de IA...")

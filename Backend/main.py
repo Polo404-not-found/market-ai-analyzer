@@ -1,4 +1,4 @@
-from Backend.IA import AnalistaIA    
+from Backend.ia import AnalistaIA    
 from Backend.datos import GestorDatos
 
 class ControladorApp:
@@ -14,6 +14,3 @@ class ControladorApp:
         reporte = self.ia.generar_reporte(prompt)
         return data_lista, reporte 
     
-if __name__ == "__main__":
-    app = ControladorApp()
-    app.iniciar_aplicacion()
