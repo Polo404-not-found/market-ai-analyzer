@@ -1,16 +1,16 @@
-from Backend.ia import AnalistaIA    
-from Backend.datos import GestorDatos
+from Backend.ai import AI_Analyst   
+from Backend.data import Data_Manager
 
-class ControladorApp:
+class App_Controller:
     def __init__(self):
-        self.datos = GestorDatos()
-        self.ia = AnalistaIA()
+        self.data = Data_Manager()
+        self.ai = AI_Analyst()
 
-    def Coordinar_Datos(self, ticker = "BTC-USD", periodo = "1mo"):        
-        data_cruda = self.datos.descargar_datos(ticker, periodo)
-        data_lista = self.datos.calcular_indicadores(data_cruda)
+    def Coordinate_Data(self, ticker = "BTC-USD", period = "1mo"):        
+        raw_data = self.data.download_data(ticker, period)
+        processed_data = self.data.process_data(raw_data)
 
-        prompt = self.ia.construir_prompt(data_lista)
-        reporte = self.ia.generar_reporte(prompt)
-        return data_lista, reporte 
+        prompt = self.ai.build_prompt(processed_data)
+        report = self.ai.generate_report(prompt)
+        return processed_data, report 
     

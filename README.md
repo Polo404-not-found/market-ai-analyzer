@@ -8,8 +8,6 @@ I'd really appreciate any feedback.
 
 Financial market analyzer that combines real historical data with technical indicators (moving averages) and AI-generated analysis (Gemini), now with a basic desktop GUI built with PySide6.
 
-Financial market analyzer that combines real historical data with technical indicators (moving averages) and AI-generated analysis (Gemini), now with a basic desktop GUI built with PySide6.
-
 Or the original command-line version:
 
 - Downloads historical data for any asset available on Yahoo Finance (stocks, cryptocurrencies, futures, ETFs)
@@ -48,10 +46,8 @@ pip install -r requirements.txt
 
 3. Set your own API key as an environment variable:
 
-   Windows (PowerShell):
-
 ```
-$env:GEMINI_API_KEY="your-key-here"
+Get your API Key from Google AI Studio and enter it directly inside the GUI application settings.
 ```
 
 4. Run the app:
@@ -61,25 +57,29 @@ $env:GEMINI_API_KEY="your-key-here"
    python app.py
    ```
 
+5. (Optional) creating the .exe
+
+```
+pyinstaller --noconfirm --onedir --windowed --name="Market AI Analyzer" --icon="Market_AI_Analyze.ico" --add-data "Market_AI_Analyze.ico;." app.py
+```
+
 Usage
-
-Enter a ticker (e.g. BTC-USD, AAPL, GC=F) and a time period (e.g. 1mo, 3mo, 1y) in the GUI, or when prompted in the terminal version, and the app will return the data chart along with an AI-generated technical analysis.
-
+Enter the API Key in the assigned space.
 Enter a ticker (e.g. `BTC-USD`, `AAPL`, `GC=F`) and a time period (e.g. `1mo`, `3mo`, `1y`) in the GUI, or when prompted in the terminal version, and the app will return the data chart along with an AI-generated technical analysis.
 
 ## Development notes
+- **Fixed minor issues**: Added Threading (QThread) to the app to fix unexpected UI freezes/crashes while waiting for the AI response and resolved candlestick chart rendering bugs.
 
-This project was built in stages rather than all at once:
+- **AI as a tool, not a shortcut**: Throughout the project, AI was used to speed up learning correct library syntax and debug specific errors — every line was reviewed and understood before being committed.
 
-- **Backend first**: the data-fetching, indicator calculation, and Gemini integration were designed with an object-oriented structure from the start.
-- **GUI, iteratively**: Now GUI.py file was modularized through OOP technics to optimize the code and its functions, added the candlechart viewer.
-- **AI as a tool, not a shortcut**: throughout the project, AI was used to speed up learning correct library syntax and debug specific errors — every line was reviewed and understood before being committed.
-- **New API function**: Now you can store your google genai API in the GUI, and automatically load it through a config.json.
+- **New .exe file**: Configured app.py with dynamic resource paths to support standalone executable packaging.
+
+- **Official release: Market AI Analyzer 1.0 is ready for publication!**
 
 ## Roadmap
 
 - [x] Refactor `GUI.py` into modular, OOP-based components
 - [x] Add candlestick chart visualization
-- [ ] Improve GUI style and overall visual design
-- [ ] Package the app as a standalone executable (.exe)
+- [x] Package the app as a standalone executable (.exe)
 - [ ] Create a setup/installer to remove the need for manual `pip install -r requirements.txt`, making the app easier to access and use for any user
+- [ ] Improve GUI style and overall visual design

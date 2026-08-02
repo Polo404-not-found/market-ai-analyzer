@@ -22,9 +22,12 @@ class candle_chart_generator(pg.GraphicsObject):
             else:
                 p.setPen(pg.mkPen("#ef5350"))
                 p.setBrush(pg.mkBrush("#ef5350"))
-
+                
             p.drawLine(QPointF(t, low_p), QPointF(t, high_p))
-            p.drawRect(QRectF(t - w, open_p, w * 2, close_p - open_p))
+            top_y = min(open_p, close_p)
+            height = abs(close_p - open_p)
+            p.drawRect(QRectF(t - w, top_y, w * 2, height))
+
         p.end()
 
     def paint(self, p, *args):
@@ -41,16 +44,16 @@ class candle_chart(QWidget):
         self.graphic.setBackground('#1e1e1e')
         self.graphic.showGrid(x=True, y=True, alpha=0.3)
 
-
         layout = QVBoxLayout()
         layout.addWidget(self.graphic)
         self.setLayout(layout)
 
     @Slot(object, str, str)
-    def recieve_data(self, data_lista, reporte, ticker):
+    def recieve_data(self, data_lista, report, ticker):
         self.graphic.clear()
-        self.graphic.setTitle(f"financial analitics {ticker}", color='#ffffff', size='12pt')
+        self.graphic.setTitle(f"Financial analytics {ticker}", color='#ffffff', size='12pt')
         formatted_data = []
+        
         if hasattr(data_lista, "iterrows"):
             for idx, (index, row) in enumerate(data_lista.iterrows()):
                 formatted_data.append((idx, row['Open'], row['Close'], row['Low'], row['High']))
@@ -62,3 +65,4 @@ class candle_chart(QWidget):
         if formatted_data:
             velas = candle_chart_generator(formatted_data)
             self.graphic.addItem(velas)
+            self.graphic.autoRange()
