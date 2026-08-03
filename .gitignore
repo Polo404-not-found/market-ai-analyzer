@@ -10,3 +10,5 @@ dist/
 *.spec
 .vscode/
 .idea/
+installer.iss
+Output/
