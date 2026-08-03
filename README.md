@@ -68,18 +68,16 @@ Enter the API Key in the assigned space.
 Enter a ticker (e.g. `BTC-USD`, `AAPL`, `GC=F`) and a time period (e.g. `1mo`, `3mo`, `1y`) in the GUI, or when prompted in the terminal version, and the app will return the data chart along with an AI-generated technical analysis.
 
 ## Development notes
-- **Fixed minor issues**: Added Threading (QThread) to the app to fix unexpected UI freezes/crashes while waiting for the AI response and resolved candlestick chart rendering bugs.
+
 
 - **AI as a tool, not a shortcut**: Throughout the project, AI was used to speed up learning correct library syntax and debug specific errors — every line was reviewed and understood before being committed.
 
-- **New .exe file**: Configured app.py with dynamic resource paths to support standalone executable packaging.
-
-- **Official release: Market AI Analyzer 1.0 is ready for publication!**
+- **Official release: Market AI Analyzer 1.0 is alrady  published!**: Check releases to download the official setup.
 
 ## Roadmap
 
 - [x] Refactor `GUI.py` into modular, OOP-based components
 - [x] Add candlestick chart visualization
 - [x] Package the app as a standalone executable (.exe)
-- [ ] Create a setup/installer to remove the need for manual `pip install -r requirements.txt`, making the app easier to access and use for any user
+- [x] Create a setup/installer to remove the need for manual `pip install -r requirements.txt`, making the app easier to access and use for any user
 - [ ] Improve GUI style and overall visual design
