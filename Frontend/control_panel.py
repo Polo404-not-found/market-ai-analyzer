@@ -3,18 +3,20 @@ from PySide6.QtCore import Signal, Slot
 from Backend.main import App_Controller
 from Backend.config import ConfigManager
 from Frontend.threads import analysis_thread
+from Frontend.ai_config import AIConfigDock
 
 class controlpanel(QWidget):
     analyze_signal = Signal(object, str, str)
 
-    def __init__(self):
+    def __init__(self, ai_config_dock: AIConfigDock, parent=None):
         super().__init__()
         self.controller = App_Controller()
         self.text = QTextBrowser()
-        self.button = QPushButton("Analizar")
+        self.button = QPushButton("Analyze")
         self.period = QComboBox()
         self.ticker = QLineEdit()
-        
+        self.ai_config_dock = ai_config_dock
+
         ## Api
         self.input_api_key = QLineEdit()
         self.input_api_key.setEchoMode(QLineEdit.Password)
@@ -51,14 +53,19 @@ class controlpanel(QWidget):
             self.text.setText("Please fill in all fields.")
             return
 
+        ai_config = {}
+        if self.ai_config_dock:
+            ai_config = self.ai_config_dock.get_configuration()
+        language = ai_config.get("language", "English")
+        techinality_level = ai_config.get("technicality_level", "Medium")
+
         ConfigManager.save_api_key(api_key)
 
         self.button.setEnabled(False)
         self.button.setText("Analysing...")
         self.text.setText("Analysing data, please wait...")
 
-        
-        self.worker_thread = analysis_thread(self.controller, ticker, period)
+        self.worker_thread = analysis_thread(self.controller, ticker, period, language, techinality_level)
         self.worker_thread.success.connect(self.on_analysis_success)
         self.worker_thread.error.connect(self.on_analysis_error)
         self.worker_thread.start()
@@ -69,10 +76,10 @@ class controlpanel(QWidget):
         self.text.setMarkdown(report)
         self.analyze_signal.emit(processed_data, report, ticker)
         self.button.setEnabled(True)
-        self.button.setText("Analizar")
+        self.button.setText("Analyze")
 
     @Slot(str)
     def on_analysis_error(self, error_message):
         self.text.setText(error_message)
         self.button.setEnabled(True)
-        self.button.setText("Analizar")
+        self.button.setText("Analyze")
