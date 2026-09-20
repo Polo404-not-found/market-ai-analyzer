@@ -1,4 +1,19 @@
 # Market AI Analyzer
+<p align="center">
+  <img src="https://img.shields.io/badge/Python-3.10+-blue?logo=python">
+  <img src="https://img.shields.io/badge/PySide6-6.x-green?logo=qt">
+  <img src="https://img.shields.io/badge/yfinance-latest-orange">
+  <img src="https://img.shields.io/badge/Gemini-API-purple?logo=google">
+  <img src="https://img.shields.io/badge/License-MIT-yellow">
+</p>
+
+<p align="center">
+  <img src="docs/Main img.png" alt="Market AI Analyzer's GUI" width="800">
+</p>
+
+<p align="center">
+  <em>Financial analytics powered by Gemini</em>
+</p>
 
 ### A quick note before you start
 
