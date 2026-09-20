@@ -1,9 +1,9 @@
-from operator import index
 
 import pyqtgraph as pg
-from PySide6.QtGui import QPicture, QPainter
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel
-from PySide6.QtCore import Slot, QPointF, QRectF 
+from PySide6.QtCore import QPointF, QRectF, Slot
+from PySide6.QtGui import QPainter, QPicture
+from PySide6.QtWidgets import QVBoxLayout, QWidget
+
 
 class candle_chart_generator(pg.GraphicsObject):
     def __init__(self, data):

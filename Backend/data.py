@@ -1,5 +1,6 @@
-import yfinance as yf 
 import pandas as pd
+import yfinance as yf
+
 
 class Data_Manager:
     def __init__(self):

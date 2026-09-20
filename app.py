@@ -1,12 +1,14 @@
-import sys
-import os
 import ctypes
+import os
+import sys
+
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QMainWindow, QApplication, QHBoxLayout, QWidget
 from PySide6.QtGui import QIcon
+from PySide6.QtWidgets import QApplication, QHBoxLayout, QMainWindow, QWidget
+
+from Frontend.ai_config import AIConfigDock
 from Frontend.control_panel import controlpanel
 from Frontend.graphic_panel import candle_chart
-from Frontend.ai_config import AIConfigDock
 
 try:
     myappid = 'dev.market_ai_analyzer.system.1'
@@ -45,10 +47,8 @@ class MainWindow(QMainWindow):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    
     icon_path = get_resource_path("Market_AI_Analyze.ico")
     app.setWindowIcon(QIcon(icon_path))
-
     window = MainWindow()
     window.show()
     sys.exit(app.exec())

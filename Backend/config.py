@@ -1,5 +1,5 @@
-import json 
-import os 
+import json
+import os
 
 config_file = "config.json"
 

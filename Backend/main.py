@@ -1,5 +1,6 @@
-from Backend.ai import AI_Analyst   
+from Backend.ai import AI_Analyst
 from Backend.data import Data_Manager
+
 
 class App_Controller:
     def __init__(self):

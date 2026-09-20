@@ -1,9 +1,19 @@
-from PySide6.QtWidgets import QLabel, QPushButton, QVBoxLayout, QWidget, QComboBox, QLineEdit, QTextBrowser
 from PySide6.QtCore import Signal, Slot
-from Backend.main import App_Controller
+from PySide6.QtWidgets import (
+    QComboBox,
+    QLabel,
+    QLineEdit,
+    QPushButton,
+    QTextBrowser,
+    QVBoxLayout,
+    QWidget,
+)
+
 from Backend.config import ConfigManager
-from Frontend.threads import analysis_thread
+from Backend.main import App_Controller
 from Frontend.ai_config import AIConfigDock
+from Frontend.threads import analysis_thread
+
 
 class controlpanel(QWidget):
     analyze_signal = Signal(object, str, str)
@@ -20,12 +30,12 @@ class controlpanel(QWidget):
         ## Api
         self.input_api_key = QLineEdit()
         self.input_api_key.setEchoMode(QLineEdit.Password)
-        self.input_api_key.setPlaceholderText("Pega tu gemini API key")
+        self.input_api_key.setPlaceholderText("You'r API key")
         save_key = ConfigManager.load_api_key()
         if save_key:
             self.input_api_key.setText(save_key)    
 
-        self.text.setPlaceholderText("Aqui se mostrara la informacion")
+        self.text.setPlaceholderText("You'r info will be displayed here")
         self.ticker.setPlaceholderText("Ej: BTC-USD, AAPL, TSLA")
         self.period.addItems(["1d", "5d", "1mo", "3mo", "6mo", "1y", "max"])
         self.button.clicked.connect(self.analyze)

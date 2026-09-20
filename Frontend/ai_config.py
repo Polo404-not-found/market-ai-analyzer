@@ -1,5 +1,15 @@
-from PySide6.QtCore import Qt 
-from PySide6.QtWidgets import QComboBox, QDockWidget, QFormLayout, QLabel, QWidget
+import webbrowser
+
+from PySide6.QtCore import Qt, Slot
+from PySide6.QtWidgets import (
+    QComboBox,
+    QDockWidget,
+    QFormLayout,
+    QLabel,
+    QPushButton,
+    QWidget,
+)
+
 
 class AIConfigDock(QDockWidget):
     def __init__(self, parent=None):
@@ -9,14 +19,22 @@ class AIConfigDock(QDockWidget):
         content = QWidget()
         layout = QFormLayout(content)
         self.language_box = QComboBox()
-        self.language_box.addItems(["Español", "English"])
+        self.language_box.addItems(["Español", "English",])
         layout.addRow(QLabel("Language:"), self.language_box)
 
         self.technicality_levels = QComboBox()
         self.technicality_levels.addItems(["Low", "Medium", "High"])
         layout.addRow(QLabel("Technicality Level:"), self.technicality_levels)
 
+        self.API_button = QPushButton("Get API")
+        self.API_button.clicked.connect(self.get_api)
+        layout.addRow(QLabel("Get you'r API key"), self.API_button)
+
         self.setWidget(content)
 
     def get_configuration(self):
         return {"language": self.language_box.currentText(), "technicality_level": self.technicality_levels.currentText()}
+    
+    @Slot()
+    def get_api(self):
+        webbrowser.open("https://aistudio.google.com/api-keys?project=gen-lang-client-0110284720")

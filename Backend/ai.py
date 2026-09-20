@@ -1,5 +1,7 @@
 import os
+
 from google import genai
+from google.genai import errors
 
 
 class AI_Analyst:
@@ -66,6 +68,9 @@ INSTRUCCIONES CLAVE DE FORMATO Y ESTILO:
       response = self.client.models.generate_content(
           model=self.model, contents=financial_prompt
       )
-      return response.text
-    except Exception as e:
+      report = getattr(response, "text", None)
+      if report:
+        return report
+      return "⚠️ Gemini returned an empty response."
+    except (errors.APIError, ValueError) as e:
       return f"⚠️ Crashed: {e}"

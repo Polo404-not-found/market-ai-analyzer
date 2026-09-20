@@ -1,5 +1,6 @@
 from PySide6.QtCore import QThread, Signal
 
+
 class analysis_thread(QThread):
     success = Signal(object, str, str)
     error = Signal(str)
