@@ -7,14 +7,12 @@ from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QApplication, QHBoxLayout, QMainWindow, QWidget
 
 from Frontend.ai_config import AIConfigDock
-from Frontend.control_panel import controlpanel
-from Frontend.graphic_panel import candle_chart
+from Frontend.control_panel import ControlPanel
+from Frontend.graphic_panel import CandleChart
 
-try:
-    myappid = 'dev.market_ai_analyzer.system.1'
-    ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
-except Exception:
-    pass
+if sys.platform == "win32":
+    my_app_id = 'dev.market_ai_analyzer.system.1'
+    ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(my_app_id)
 
 def get_resource_path(relative_path):
     if hasattr(sys, '_MEIPASS'):
@@ -32,10 +30,10 @@ class MainWindow(QMainWindow):
 
         self.ai_config_dock = AIConfigDock(self)
         self.addDockWidget(Qt.LeftDockWidgetArea, self.ai_config_dock)
-        self.control_panel = controlpanel(ai_config_dock=self.ai_config_dock)
-        self.candle_chart = candle_chart()
+        self.control_panel = ControlPanel(ai_config_dock=self.ai_config_dock)
+        self.candle_chart = CandleChart()
 
-        self.control_panel.analyze_signal.connect(self.candle_chart.recieve_data)
+        self.control_panel.analyze_signal.connect(self.candle_chart.receive_prices)
 
         layout = QHBoxLayout()
         layout.addWidget(self.control_panel, stretch=1)

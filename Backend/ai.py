@@ -4,7 +4,7 @@ from google import genai
 from google.genai import errors
 
 
-class AI_Analyst:
+class AIAnalyst:
 
   def __init__(self):
     self.model = "gemini-3.5-flash"  
@@ -24,12 +24,11 @@ class AI_Analyst:
 
   
   def build_prompt(
-      self, processed_data, language="Español", technicality="Medium"):
+      self, processed_prices, language="Español", technicality="Medium"):
     print("Building prompt for AI analysis...")
     last_days = (
-        processed_data[["Close", "MA5", "MA20"]].tail(7).to_string())
+        processed_prices[["Close", "MA5", "MA20"]].tail(7).to_string())
 
-    # Mapeo simple opcional para guiar mejor a la IA según el nivel
     tech_instructions = {
         "Low": "Aplica un enfoque sencillo, accesible y con conceptos básicos.",
         "Medium": "Usa una terminología técnica equilibrada propia de trading.",

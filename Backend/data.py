@@ -2,14 +2,14 @@ import pandas as pd
 import yfinance as yf
 
 
-class Data_Manager:
+class DataManager:
     def __init__(self):
-        self.proveedor = "Yahoo Finance"
+        self.provider = "Yahoo Finance"
 
-    def download_data(self, ticker, periodo):
+    def download_prices(self, ticker, period):
         clean_ticker = ticker.strip().upper()
-        clean_period = periodo.strip().lower()
-        print(f"Downloading data for {clean_ticker} from {self.proveedor}...")
+        clean_period = period.strip().lower()
+        print(f"Downloading data for {clean_ticker} from {self.provider}...")
 
         interval_map = {
             "1d": "5m",
@@ -21,18 +21,18 @@ class Data_Manager:
         }
         clean_interval = interval_map.get(clean_period, "1d")
         ticker_data = yf.Ticker(clean_ticker)
-        raw_dataframe = ticker_data.history(period=clean_period, interval=clean_interval)
+        prices_dataframe = ticker_data.history(period=clean_period, interval=clean_interval)
 
-        if raw_dataframe.empty:
+        if prices_dataframe.empty:
             raise ValueError(f" Coudln't reach data {clean_ticker}")
         
-        return raw_dataframe
+        return prices_dataframe
 
-    def process_data(self, raw_dataframe):
-        if raw_dataframe.empty:
+    def process_prices(self, prices_dataframe):
+        if prices_dataframe.empty:
             print("⚠️ Empty DataFrame.")
-            return raw_dataframe
-        df = raw_dataframe.copy()
+            return prices_dataframe
+        df = prices_dataframe.copy()
         df['MA5'] = df['Close'].rolling(window=5).mean()
         df['MA20'] = df['Close'].rolling(window=20).mean()
 

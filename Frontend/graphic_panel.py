@@ -5,7 +5,7 @@ from PySide6.QtGui import QPainter, QPicture
 from PySide6.QtWidgets import QVBoxLayout, QWidget
 
 
-class candle_chart_generator(pg.GraphicsObject):
+class CandleChartGenerator(pg.GraphicsObject):
     def __init__(self, data):
         super().__init__()
         self.data = data 
@@ -13,30 +13,30 @@ class candle_chart_generator(pg.GraphicsObject):
         self.generate_picture()
 
     def generate_picture(self):
-        p = QPainter(self.picture)
-        w = 0.3
-        for t, open_p, close_p, low_p, high_p in self.data:
-            if close_p >= open_p:
-                p.setPen(pg.mkPen("#26a69a"))
-                p.setBrush(pg.mkBrush("#26a69a"))
+        painter = QPainter(self.picture)
+        candle_width = 0.3
+        for timestamp, open_price, close_price, low_price, high_price in self.data:
+            if close_price >= open_price:
+                painter.setPen(pg.mkPen("#26a69a"))
+                painter.setBrush(pg.mkBrush("#26a69a"))
             else:
-                p.setPen(pg.mkPen("#ef5350"))
-                p.setBrush(pg.mkBrush("#ef5350"))
+                painter.setPen(pg.mkPen("#ef5350"))
+                painter.setBrush(pg.mkBrush("#ef5350"))
                 
-            p.drawLine(QPointF(t, low_p), QPointF(t, high_p))
-            top_y = min(open_p, close_p)
-            height = abs(close_p - open_p)
-            p.drawRect(QRectF(t - w, top_y, w * 2, height))
+            painter.drawLine(QPointF(timestamp, low_price), QPointF(timestamp, high_price))
+            top_y = min(open_price, close_price)
+            height = abs(close_price - open_price)
+            painter.drawRect(QRectF(timestamp - candle_width, top_y, candle_width * 2, height))
 
-        p.end()
+        painter.end()
 
-    def paint(self, p, *args):
-        p.drawPicture(0, 0, self.picture)
+    def paint(self, painter, *args):
+        painter.drawPicture(0, 0, self.picture)
 
     def boundingRect(self):
         return QRectF(self.picture.boundingRect())
     
-class candle_chart(QWidget):
+class CandleChart(QWidget):
     def __init__(self):
         super().__init__()
 
@@ -49,20 +49,20 @@ class candle_chart(QWidget):
         self.setLayout(layout)
 
     @Slot(object, str, str)
-    def recieve_data(self, data_lista, report, ticker):
+    def receive_prices(self, data_list, _report, ticker):
         self.graphic.clear()
         self.graphic.setTitle(f"Financial analytics {ticker}", color='#ffffff', size='12pt')
         formatted_data = []
         
-        if hasattr(data_lista, "iterrows"):
-            for idx, (index, row) in enumerate(data_lista.iterrows()):
-                formatted_data.append((idx, row['Open'], row['Close'], row['Low'], row['High']))
+        if hasattr(data_list, "iterrows"):
+            for index, (_, row) in enumerate(data_list.iterrows()):
+                formatted_data.append((index, row['Open'], row['Close'], row['Low'], row['High']))
 
-        elif isinstance(data_lista, list):
-            for idx, row in enumerate(data_lista):
-                formatted_data.append((idx, row['Open'], row['Close'], row['Low'], row['High']))
+        elif isinstance(data_list, list):
+            for index, row in enumerate(data_list):
+                formatted_data.append((index, row['Open'], row['Close'], row['Low'], row['High']))
 
         if formatted_data:
-            velas = candle_chart_generator(formatted_data)
-            self.graphic.addItem(velas)
+            candles = CandleChartGenerator(formatted_data)
+            self.graphic.addItem(candles)
             self.graphic.autoRange()

@@ -1,7 +1,7 @@
 from PySide6.QtCore import QThread, Signal
 
 
-class analysis_thread(QThread):
+class AnalysisThread(QThread):
     success = Signal(object, str, str)
     error = Signal(str)
 
@@ -15,7 +15,7 @@ class analysis_thread(QThread):
 
     def run(self):
         try:
-            processed_data, report = self.controller.Coordinate_Data(self.ticker, self.period, self.language, self.technicality)
+            processed_data, report = self.controller.coordinate_data(self.ticker, self.period, self.language, self.technicality)
             self.success.emit(processed_data, report, self.ticker)
         except ValueError as e:
             self.error.emit(f"Error: {e}")

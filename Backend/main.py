@@ -1,17 +1,17 @@
-from Backend.ai import AI_Analyst
-from Backend.data import Data_Manager
+from Backend.ai import AIAnalyst
+from Backend.data import DataManager
 
 
-class App_Controller:
+class AppController:
     def __init__(self):
-        self.data = Data_Manager()
-        self.ai = AI_Analyst()
+        self.data = DataManager()
+        self.ai = AIAnalyst()
 
-    def Coordinate_Data(self, ticker = "BTC-USD", period = "1mo", language = "English", technicality_level = "Medium"):        
-        raw_data = self.data.download_data(ticker, period)
-        processed_data = self.data.process_data(raw_data)
+    def coordinate_data(self, ticker = "BTC-USD", period = "1mo", language = "English", technicality_level = "Medium"):
+        raw_prices = self.data.download_prices(ticker, period)
+        processed_prices = self.data.process_prices(raw_prices)
 
-        prompt = self.ai.build_prompt(processed_data, language, technicality_level)
+        prompt = self.ai.build_prompt(processed_prices, language, technicality_level)
         report = self.ai.generate_report(prompt)
-        return processed_data, report 
+        return processed_prices, report 
     

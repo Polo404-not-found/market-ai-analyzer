@@ -26,9 +26,9 @@ class AIConfigDock(QDockWidget):
         self.technicality_levels.addItems(["Low", "Medium", "High"])
         layout.addRow(QLabel("Technicality Level:"), self.technicality_levels)
 
-        self.API_button = QPushButton("Get API")
-        self.API_button.clicked.connect(self.get_api)
-        layout.addRow(QLabel("Get you'r API key"), self.API_button)
+        self.api_button = QPushButton("Get API")
+        self.api_button.clicked.connect(self.get_api)
+        layout.addRow(QLabel("Get you'r API key"), self.api_button)
 
         self.setWidget(content)
 

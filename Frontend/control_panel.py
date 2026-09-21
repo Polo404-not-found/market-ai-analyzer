@@ -10,24 +10,23 @@ from PySide6.QtWidgets import (
 )
 
 from Backend.config import ConfigManager
-from Backend.main import App_Controller
+from Backend.main import AppController
 from Frontend.ai_config import AIConfigDock
-from Frontend.threads import analysis_thread
+from Frontend.threads import AnalysisThread
 
 
-class controlpanel(QWidget):
+class ControlPanel(QWidget):
     analyze_signal = Signal(object, str, str)
 
     def __init__(self, ai_config_dock: AIConfigDock, parent=None):
-        super().__init__()
-        self.controller = App_Controller()
+        super().__init__(parent)
+        self.controller = AppController()
         self.text = QTextBrowser()
         self.button = QPushButton("Analyze")
         self.period = QComboBox()
         self.ticker = QLineEdit()
         self.ai_config_dock = ai_config_dock
 
-        ## Api
         self.input_api_key = QLineEdit()
         self.input_api_key.setEchoMode(QLineEdit.Password)
         self.input_api_key.setPlaceholderText("You'r API key")
@@ -67,7 +66,7 @@ class controlpanel(QWidget):
         if self.ai_config_dock:
             ai_config = self.ai_config_dock.get_configuration()
         language = ai_config.get("language", "English")
-        techinality_level = ai_config.get("technicality_level", "Medium")
+        technicality_level = ai_config.get("technicality_level", "Medium")
 
         ConfigManager.save_api_key(api_key)
 
@@ -75,7 +74,7 @@ class controlpanel(QWidget):
         self.button.setText("Analysing...")
         self.text.setText("Analysing data, please wait...")
 
-        self.worker_thread = analysis_thread(self.controller, ticker, period, language, techinality_level)
+        self.worker_thread = AnalysisThread(self.controller, ticker, period, language, technicality_level)
         self.worker_thread.success.connect(self.on_analysis_success)
         self.worker_thread.error.connect(self.on_analysis_error)
         self.worker_thread.start()
