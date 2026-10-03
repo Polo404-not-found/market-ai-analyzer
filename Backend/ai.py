@@ -3,43 +3,51 @@ import os
 from google import genai
 from google.genai import errors
 
+from Backend.errors import (
+    AIAnalysisError,
+    AIRateLimitError,
+    DataProcessingError,
+    MissingApiKeyError,
+)
+
 
 class AIAnalyst:
 
-  def __init__(self):
-    self.model = "gemini-3.5-flash"  
-    self._client = None
+    def __init__(self):
+        self.model = "gemini-3.5-flash"
+        self._client = None
 
-  @property
-  def client(self):
-    if self._client is None:
-      api_key = os.environ.get("GEMINI_API_KEY")
-      if not api_key:
-        raise ValueError(
-            "API key for Gemini is not set. Please set the GEMINI_API_KEY"
-            " environment variable."
-        )
-      self._client = genai.Client()
-    return self._client
+    @property
+    def client(self):
+        if self._client is None:
+            api_key = os.environ.get("GEMINI_API_KEY")
+            if not api_key or not api_key.strip():
+                raise MissingApiKeyError()
+            self._client = genai.Client()
+        return self._client
 
-  
-  def build_prompt(
-      self, processed_prices, language="Español", technicality="Medium"):
-    print("Building prompt for AI analysis...")
-    last_days = (
-        processed_prices[["Close", "MA5", "MA20"]].tail(7).to_string())
+    def build_prompt(
+        self, processed_prices, language="Español", technicality="Medium"
+    ):
+        print("Building prompt for AI analysis...")
+        required_cols = ["Close", "MA5", "MA20"]
+        missing_cols = [col for col in required_cols if col not in processed_prices.columns]
+        if missing_cols:
+            raise DataProcessingError(f"Missing required columns for prompt: {missing_cols}")
 
-    tech_instructions = {
-        "Low": "Aplica un enfoque sencillo, accesible y con conceptos básicos.",
-        "Medium": "Usa una terminología técnica equilibrada propia de trading.",
-        "High": (
-            "Emplea un lenguaje cuantitativo avanzado, análisis institucional y"
-            " métricas rigurosas."
-        ),
-    }
-    desc_tech = tech_instructions.get( technicality, tech_instructions["Medium"])
+        last_days = processed_prices[required_cols].tail(7).to_string()
 
-    prompt = f"""Actúa como un Analista Financiero Senior y experto en Trading Cuantitativo.
+        tech_instructions = {
+            "Low": "Aplica un enfoque sencillo, accesible y con conceptos básicos.",
+            "Medium": "Usa una terminología técnica equilibrada propia de trading.",
+            "High": (
+                "Emplea un lenguaje cuantitativo avanzado, análisis institucional y"
+                " métricas rigurosas."
+            ),
+        }
+        desc_tech = tech_instructions.get(technicality, tech_instructions["Medium"])
+
+        prompt = f"""Actúa como un Analista Financiero Senior y experto en Trading Cuantitativo.
 Analiza la siguiente tabla de datos históricos recientes que contiene el Precio de Cierre (Close), la Media Móvil Rápida (MA5) y la Media Móvil Lenta (MA20).
 
 Datos del mercado:
@@ -59,17 +67,26 @@ INSTRUCCIONES CLAVE DE FORMATO Y ESTILO:
 - Al final recomienda el posible escenario más probable y la acción a tomar (comprar, vender o mantener) con base en tu análisis.
 - Responde únicamente utilizando texto plano y formato Markdown estándar. NO utilices LaTeX ni sintaxis como \\text{{}} o $$ para fórmulas matemáticas.
 """
-    return prompt
+        return prompt
 
-  def generate_report(self, financial_prompt):
-    print(f"Asking {self.model} for prediction...")
-    try:
-      response = self.client.models.generate_content(
-          model=self.model, contents=financial_prompt
-      )
-      report = getattr(response, "text", None)
-      if report:
-        return report
-      return "⚠️ Gemini returned an empty response."
-    except (errors.APIError, ValueError) as e:
-      return f"⚠️ Crashed: {e}"
+    def generate_report(self, financial_prompt: str) -> str:
+        print(f"Asking {self.model} for prediction...")
+        try:
+            response = self.client.models.generate_content(
+                model=self.model, contents=financial_prompt
+            )
+            report = getattr(response, "text", None)
+            if not report or not report.strip():
+                raise AIAnalysisError(
+                    "Gemini returned an empty response or content was blocked by safety filters."
+                )
+            return report
+        except errors.APIError as e:
+            error_msg = str(e)
+            if getattr(e, "code", None) == 429 or "RESOURCE_EXHAUSTED" in error_msg:
+                raise AIRateLimitError() from e
+            raise AIAnalysisError(f"Gemini API error: {getattr(e, 'message', error_msg)}") from e
+        except MissingApiKeyError:
+            raise
+        except Exception as e:
+            raise AIAnalysisError(f"Unexpected error when connecting to AI model: {e}") from e

@@ -10,6 +10,7 @@ from PySide6.QtWidgets import (
 )
 
 from Backend.config import ConfigManager
+from Backend.errors import ConfigurationError
 from Backend.main import AppController
 from Frontend.ai_config import AIConfigDock
 from Frontend.threads import AnalysisThread
@@ -29,13 +30,16 @@ class ControlPanel(QWidget):
 
         self.input_api_key = QLineEdit()
         self.input_api_key.setEchoMode(QLineEdit.Password)
-        self.input_api_key.setPlaceholderText("You'r API key")
-        save_key = ConfigManager.load_api_key()
-        if save_key:
-            self.input_api_key.setText(save_key)    
+        self.input_api_key.setPlaceholderText("Your API key")
+        try:
+            save_key = ConfigManager.load_api_key()
+            if save_key:
+                self.input_api_key.setText(save_key)
+        except ConfigurationError:
+            pass
 
-        self.text.setPlaceholderText("You'r info will be displayed here")
-        self.ticker.setPlaceholderText("Ej: BTC-USD, AAPL, TSLA")
+        self.text.setPlaceholderText("Your info will be displayed here")
+        self.ticker.setPlaceholderText("Ex: BTC-USD, AAPL, TSLA")
         self.period.addItems(["1d", "5d", "1mo", "3mo", "6mo", "1y", "max"])
         self.button.clicked.connect(self.analyze)
 
@@ -45,7 +49,7 @@ class ControlPanel(QWidget):
 
         left_layout.addWidget(QLabel("Ticker: "))
         left_layout.addWidget(self.ticker)
-        left_layout.addWidget(QLabel("Periodo: "))
+        left_layout.addWidget(QLabel("Period: "))
         left_layout.addWidget(self.period)
         left_layout.addWidget(self.text)
         left_layout.addWidget(self.button)
@@ -68,7 +72,11 @@ class ControlPanel(QWidget):
         language = ai_config.get("language", "English")
         technicality_level = ai_config.get("technicality_level", "Medium")
 
-        ConfigManager.save_api_key(api_key)
+        try:
+            ConfigManager.save_api_key(api_key)
+        except ConfigurationError as e:
+            self.text.setText(f"⚠️ {e}")
+            return
 
         self.button.setEnabled(False)
         self.button.setText("Analysing...")
@@ -78,7 +86,6 @@ class ControlPanel(QWidget):
         self.worker_thread.success.connect(self.on_analysis_success)
         self.worker_thread.error.connect(self.on_analysis_error)
         self.worker_thread.start()
-
 
     @Slot(object, str, str)
     def on_analysis_success(self, processed_data, report, ticker):

@@ -1,7 +1,10 @@
 import json
 import os
 
+from Backend.errors import ConfigurationError
+
 CONFIG_FILE = "config.json"
+
 
 class ConfigManager:
 
@@ -17,7 +20,7 @@ class ConfigManager:
             with open(CONFIG_FILE, "w", encoding="utf-8") as archive:
                 json.dump(config_data, archive, indent=4)
         except Exception as e:
-            print(f"Failed to save the Key {e}")
+            raise ConfigurationError(f"Failed to save API key to '{CONFIG_FILE}': {e}") from e
 
         os.environ["GEMINI_API_KEY"] = api_key
 
@@ -32,7 +35,6 @@ class ConfigManager:
                     if api_key:
                         os.environ["GEMINI_API_KEY"] = api_key
                         return api_key
-
             except Exception as e:
-                print(f"Failed to load API key {e}")
+                raise ConfigurationError(f"Failed to read configuration file '{CONFIG_FILE}': {e}") from e
         return ""
