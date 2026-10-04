@@ -84,9 +84,8 @@ Enter a ticker (e.g. `BTC-USD`, `AAPL`, `GC=F`) and a time period (e.g. `1mo`, `
 
 ## Development notes
 
-- **Added a configuration panel**: This configuration panel let's the user select between two selected and the technicity level in the AI answer, this is made to let someone that doesn't understand technical language learn and understand.
-
-- **Soon Visual changes on the GUI are going to be added**: Through the QSS from PySide6 library, GUI is going to be reworked, to improve the visual part of the app.
+- **Added Get API button** Added a button to open Google AI Studio, this to help the User to get his API key.
+- **Working on release v1.1.0** Featuring the API button, logs, etc.
 
 ## Roadmap
 
